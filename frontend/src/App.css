@@ -1,0 +1,19 @@
+
+.d-flex {
+  display: flex!important;
+  height: 100vh;
+}
+
+.center {
+  margin: 0 auto;
+  align-self: center;
+  justify-content: center;
+    align-items: center;
+}
+.App{
+  display: flex;
+  justify-content:left;
+}
+.chart{
+  width: 100px;
+}
