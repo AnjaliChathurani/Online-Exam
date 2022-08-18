@@ -20,6 +20,7 @@ class StudentMainView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      idstudent: "",
       filter: "",
       exam: [
         { Idexam: "", exam: "", date_time: "", duration: "", status: "0" },
@@ -29,9 +30,13 @@ class StudentMainView extends React.Component {
 
   componentDidMount() {
     const exam = this.state.exam;
+    const idstudent = this.props.location.state.detail;
+    console.log("loginnnstudent", idstudent);
     //console.log("examination student", this.state.exam);
     axios
-      .get("http://localhost:3001/studenttable")
+      .get("http://localhost:3001/studenttable", {
+        params: { idstudent: idstudent },
+      })
 
       .then((response) => {
         //console.log("exam", response.data);
@@ -113,6 +118,7 @@ class StudentMainView extends React.Component {
                       return (
                         <tr
                           onClick={() => {
+                            const idstudent = this.props.location.state.detail;
                             console.log("examIDstu ", data.Idexam);
 
                             const studentexamInfo = {
@@ -129,10 +135,14 @@ class StudentMainView extends React.Component {
                             );
 
                             data.status === 1
-                              ? this.props.history.push("/ExamResultss")
-                              : this.props.history.push(
-                                  "/StudentSingleExamView"
-                                );
+                              ? this.props.history.push({
+                                  pathname: "/ExamResultss",
+                                  state: { detail: idstudent },
+                                })
+                              : this.props.history.push({
+                                  pathname: "/StudentSingleExamView",
+                                  state: { detail: idstudent },
+                                });
                           }}
                           key={index}
                         >

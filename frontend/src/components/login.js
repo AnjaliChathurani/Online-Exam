@@ -10,7 +10,6 @@ class Login extends React.Component {
       email: "",
       password: "",
       role: "",
-      idstudent: "",
       LoginId: "",
     };
   }
@@ -42,11 +41,35 @@ class Login extends React.Component {
         role: role,
       })
       .then((res) => {
-        res.data[0].role === "teacher"
-          ? this.props.history.push("/TeacherMain")
-          : this.props.history.push("/StudentMainView");
+        console.log("resp ", res);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        if (res.data.role === "teacher") {
+          this.props.history.push({
+            pathname: "/TeacherMain",
+            state: { detail: res.data.user[0].idteacher },
+          });
+        } else {
+          this.props.history.push({
+            pathname: "/StudentMainView",
+            state: { detail: res.data.user[0].idstudent },
+          });
+        }
+        console.log("student state", res.data.user[0].idstudent);
 
         // console.log("login", res.data[0].LoginId);
+        // localStorage.setItem("user", JSON.stringify(res.data));
+
+        // res.data[0].role === "teacher"
+        //   ? this.props.history.push({
+        //       pathname: "/TeacherMain",
+        //       state: { detail: res.data.user[0].idteacher },
+        //     })
+        //   : this.props.history.push({
+        //       pathname: "/StudentMainView",
+        //       state: { detail: res.data[0].LoginId },
+        //     });
+
+        //console.log("login", res.data[0].LoginId);
       });
   };
 

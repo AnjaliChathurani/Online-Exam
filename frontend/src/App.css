@@ -17,3 +17,7 @@
 .chart{
   width: 100px;
 }
+
+.list-group-item{
+  margin-bottom: 0;
+}

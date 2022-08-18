@@ -4,11 +4,13 @@ import Table from "./Table";
 import TeacherSingleForm from "./TeacherSingleForm";
 import "./teacher.css";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 
 class TeacherSingle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      LoginId: "",
       QuestionsList: [],
       newQuestionsList: [],
       quesionObj: null,
@@ -16,16 +18,29 @@ class TeacherSingle extends React.Component {
       editIndex: -1,
     };
   }
+
   componentDidMount() {
+    //const QuestionsList = this.state.QuestionsList;
+    const idteacher = JSON.parse(localStorage.getItem("user"));
+    console.log("loginnnstuexm", idteacher);
+
     const examInfo = JSON.parse(localStorage.getItem("examInfo"));
     console.log("ex ", examInfo);
+    if (examInfo) {
+      axios
 
-    axios
-      .get(`http://localhost:3001/QuestionAns/${examInfo.examId}`)
+        .get(`http://localhost:3001/QuestionAns/${examInfo.examId}`, {
+          params: { idteacher: idteacher },
+        })
 
-      .then((response) => {
-        this.setState({ examInfo: response.data });
-      });
+        .then((response) => {
+          console.log("response ", response.data);
+
+          this.setState({ QuestionsList: response.data });
+        });
+    } else {
+      axios.get("http://localhost:3001/QuestionAns");
+    }
   }
   addQuesion = (qob) => {
     var queslist = this.state.QuestionsList;
@@ -35,9 +50,10 @@ class TeacherSingle extends React.Component {
 
   //update
   updateQuesion = (qo) => {
-    var newquelist = this.state.newQuestionsList;
-    newquelist.push(qo);
-    this.setState({ QuestionsList: newquelist });
+    console.log("qo", qo);
+    var quelist = this.state.QuestionsList;
+    quelist[this.state.editIndex] = qo;
+    this.setState({ QuestionsList: quelist });
   };
 
   //handle click on rows
@@ -52,10 +68,26 @@ class TeacherSingle extends React.Component {
       this.setState({ quesionObj: null, editIndex: -1, isShowForm: true });
     });
   };
+  handleBack = () => {
+    const idteacher = JSON.parse(localStorage.getItem("user"));
+    this.props.history.push({
+      pathname: "/TeacherMain",
+      state: { detail: idteacher },
+    });
+    console.log("details check", idteacher);
+  };
 
   render() {
     return (
       <div className="align-items-center justify-content-center teacher-table">
+        <Button
+          style={{ padding: "10px", width: "30%", margin: "9px" }}
+          size={"lg"}
+          variant="success"
+          onClick={() => this.handleBack()}
+        >
+          Back
+        </Button>
         <div
           style={{
             justifyContent: "center",
@@ -85,9 +117,7 @@ class TeacherSingle extends React.Component {
               >
                 <Table
                   handleClickQuestion={this.handleClickQuestion}
-                  tableData={
-                    (this.state.QuestionsList, this.state.newQuestionsList)
-                  }
+                  tableData={this.state.QuestionsList}
                 />
               </div>
             </Col>
@@ -126,4 +156,4 @@ class TeacherSingle extends React.Component {
     );
   }
 }
-export default TeacherSingle;
+export default withRouter(TeacherSingle);
