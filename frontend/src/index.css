@@ -8,7 +8,7 @@
   width:100px;
 }
 body {
-  background: #585b5e !important;
+  background: #ecf3fa !important;
   background-size: 100px;
   min-height: 50vh;
   display: flex;
@@ -24,20 +24,22 @@ h1,h2,h3,h4,h5,h6,label,span {
   font-weight: 500;
   font-family: 'Fira Sans', sans-serif;
 }
-body, html, .App, #root, .auth-wrapper {
+/* body, html, .App, #root, .auth-wrapper {
   width: 50%;
   height: 50%;
   justify-content: center;
   position: absolute;
   --container-width-lg: 75%;
-}
-form_login {
+} */
+#root{width:100%;}
+#form_login {
     border-color: rgb(170, 106, 21);
     width:10rem;
     height: 30rem;
     padding: auto;
     justify-content: center;
     margin-top: 3rem;
+    margin-left: 800;
   
     background-position: center;
  
@@ -45,8 +47,9 @@ form_login {
 }
 
 .form_input{
-  width: 150%;
+  width: 200%;
   padding: 1.5rem;
+
  
   justify-content: center;
  

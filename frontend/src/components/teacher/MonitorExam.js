@@ -1,176 +1,113 @@
-import Card from 'react-bootstrap/Card';
+
+import React from 'react';
 import Container from 'react-bootstrap/Container';
-import Dropdown from 'react-bootstrap/Dropdown';
+
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 
-import {CardGroup,ListGroup,Col,Form,Row,Button} from 'react-bootstrap'; 
+import {CardGroup,ListGroup,Col,Form,Row,Button, Card, ListGroupItem} from 'react-bootstrap'; 
 
-function monitorExam() {
-  
-  return (
-    <div className="Container"> 
-      
-      <div style={{ display: 'block', 
-                  width: 700, 
-                  height :500,
-                  
-
-                  
-                  padding: 100 }}></div> 
-            <Dropdown align="center">
-            <Dropdown.Toggle variant="success">
-            exams
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-          <Dropdown.Item href="#">
-           Year End
-          </Dropdown.Item>
-         <Dropdown.Item href="#">
-           Mid Sem
-         </Dropdown.Item>
-         <Dropdown.Item href="#">
-           Unit Exam
-         </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-      
-      
-
-       <Container className='p-4'>
-       <CardGroup>  
- 
-        <Card >  
-           <Card.Body>  
-             <Card.Title></Card.Title>  
-              <Card.Text>  
-               some more content with Lorem Ipsum is simply dummy text of the printing and typesetting industry  
-             </Card.Text>  
-    
-  </Card.Body>  
-</Card>  
-
-
-<Col md="4">  
-<div style={{ display: 'block', 
-                  width: 100, 
-                  height :100,
-                  
-                  padding: 50 }}></div> 
-  <Card>  
-     <ListGroup variant="flush">  
-    <ListGroup.Item>
-    <Row>
-         <Form.Label column="lg" lg={2} md={4}>
-          
-         </Form.Label>
+class MonitorExam extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = [
        
-         <Col>
-         <Form.Control size="lg" type="text" placeholder="Student" />
-         </Col>
-         <Col xs={6} md={4}>
-         <Dropdown>
-         <Dropdown.Toggle>
-         
-         </Dropdown.Toggle>
-         <Dropdown.Menu>
-          <Dropdown.Item href="#">
-           Cpmplete
-          </Dropdown.Item>
-          </Dropdown.Menu>
-          <Dropdown.Menu>
-          <Dropdown.Item href="#">
-           Draft
-          </Dropdown.Item>
-          </Dropdown.Menu>
-          </Dropdown>
-          
-         </Col>
-         </Row>
         
-    </ListGroup.Item>  
-    <ListGroup.Item>
-    <Row>
-         <Form.Label column="lg" lg={2}>
-          
-         </Form.Label>
-         <Col>
-         <Form.Control size="lg" type="text" placeholder="Student" />
-         </Col>
-         </Row>
-    </ListGroup.Item>  
-    <ListGroup.Item>
-    <Row>
-         <Form.Label column="lg" lg={2}>
-          
-         </Form.Label>
-         <Col>
-         <Form.Control size="lg" type="text" placeholder="Student" />
-         </Col>
-         </Row>
-    </ListGroup.Item>  
-    <ListGroup.Item>
-    <Row>
-         <Form.Label column="lg" lg={2}>
-          
-         </Form.Label>
-         <Col>
-         <Form.Control size="lg" type="text" placeholder="Student" />
-         </Col>
-         </Row>
-    </ListGroup.Item>  
-  </ListGroup>  
-</Card>  
-    </Col> 
+        {isComplete:"Complete"},
+
+        
+        
+      ]
+      
   
-</CardGroup>
-</Container> 
-<Container className='p-4'>
-
-       <CardGroup>  
-        
- 
-        <Card className= "w-25 p-3" >  
-           <Card.Body>  
-            
-              <Card.Text>  
-              <Row>
-               <Form.Label column="lg" lg={2}>
-               start time
-               </Form.Label>
-               <Col>
-               <Form.Control size="sm" type="text" placeholder="" />
-               </Col>
-               </Row>
-               <Row>
-               <Form.Label column="lg" lg={2}>
-               start time
-               </Form.Label>
-               <Col>
-               <Form.Control size="sm" type="text" placeholder="" />
-               </Col>
-               </Row>
-               
-
-
-             </Card.Text>
-               
-        
-      
-    
-  </Card.Body>  
-</Card> 
-</CardGroup>
-</Container> 
-<div class="text-right">
-<Button as="input"  type="submit" value="Submit" />{' '}
-        </div>
-            
-      
-    
-  </div>
-  );
 }
 
-export default monitorExam;
+     
+    
+       
+  
+render() {
+    return(
+        <div className="d-flex align-items-center justify-content-center">
+        <Container style={{margintop:"10px",padding:"30px",border:"5px solid rgba(0, 0, 0.5, 0.05)",backgroundColor:"grey"}}>
+            
+            <CardGroup style={{padding:"40px"}}>
+                <Card>
+                    <h4 style={{padding:"20px",fontWeight:"bold",fontSize:"20px"}}>Exam Complete</h4>
+                    <h1 style={{textAlign:"center"}}>15/20</h1>
+                    <h5 style={{textAlign:"center"}}>Time Left 00.15min</h5>
+                </Card>
+                <Card>
+                    <h4 style={{padding:"20px",fontWeight:"bolder"}}>Attending Student List</h4>
+                    
+                        <ListGroup>
+                            {this.state.map((data,index)=>{
+                            return(
+                            <>
+                            <div key={index}></div>
+                            
+
+                            
+                                <ListGroup.Item>
+                                
+                                student1 <span style={{paddingLeft:"290px"}} />
+                                {data.isComplete}
+                            
+                            
+                                </ListGroup.Item>
+                                
+
+                                <ListGroup.Item>
+                                student2 <span style={{paddingLeft:"290px"}} />
+                                {data.isComplete}
+                                
+                                </ListGroup.Item>
+
+                                <ListGroup.Item>
+                                student3 <span style={{paddingLeft:"290px"}} />
+                                {data.isComplete}
+                                
+                                
+                                </ListGroup.Item>
+                            </> 
+                            );
+                            })}
+                        </ListGroup>
+                </Card> 
+            </CardGroup>
+
+            <CardGroup>
+                <Card style={{border:"5px solid rgba(0, 0, 0.5, 0.05)", padding:"25px",fontWeight:"bold"}}>
+                    <ListGroup>
+                        <ListGroupItem>
+                                Exam Start Time
+                        </ListGroupItem>
+                        <ListGroupItem>
+                                Exam End Time
+                        </ListGroupItem>
+                    </ListGroup>
+                </Card>  
+            </CardGroup>
+            <Button style={{padding:"10px",marginLeft:"1000px",width:"100px"}} size={"lg"} variant="secondary" >End Exam</Button>
+        </Container> 
+        </div> 
+    );
+    }
+}
+  export default MonitorExam;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
