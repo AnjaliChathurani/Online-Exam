@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const _ = require("lodash");
+const { result } = require("lodash");
 
 app.use(cors());
 app.use(express.json());
@@ -151,19 +152,6 @@ const saveQuestions = (exmId, questionsAnsers) => {
       }
     );
   });
-  // questionsAnsers.map((quiz) => {
-  //   db.query(
-  //     "INSERT INTO question(Question,exam_IdExam) VALUES(?,?)",
-  //     [quiz.question, exmId],
-  //     (err, result) => {
-  //       if (!err) {
-  //         saveAnswers(result.insertId, questionsAnsers);
-  //       } else {
-  //         console.log(err);
-  //       }
-  //     }
-  //   );
-  // });
 };
 
 const saveAnswers = (quizId, answers) => {
@@ -180,23 +168,6 @@ const saveAnswers = (quizId, answers) => {
       }
     );
   });
-
-  // answers.map((ans, index) => {
-  //   //console.log("answers : ", ans);
-  //   //console.log("Ss", ans.answers);
-
-  //   db.query(
-  //     "INSERT INTO answer(answer,CorrectAns,Question_idQuestion)VALUES(?,?,?)",
-
-  //     [ans.answers[index].answerVal, ans.answers[index].isCorrect, quizId],
-
-  //     (err, result) => {
-  //       if (err) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   );
-  // });
 };
 
 //teacher single update button
@@ -270,7 +241,7 @@ const saveUpdatedQuestions = (exmId, questionsAnsers) => {
 const saveUpdatedAnswers = (quizId, answers) => {
   answers.forEach((ans) => {
     db.query(
-      "UPDATE answer SET answer =? , CorrectAns =? WHERE Question_idQuestion =?",
+      "UPDATE answer SET answer =? , CorrectAns =? Question_idQuestion =? WHERE answerId=?",
       [ans.answer, ans.CorrectAns, quizId],
 
       (err, result) => {
@@ -372,6 +343,7 @@ app.get("/QuestionAns/:examId", (req, res) => {
 app.get("/studenttable", (req, res) => {
   console.log(req.body);
   const LoginId = req.query.loginid;
+
   // const examm = req.body.examm;
   // const stat = req.body.stat;
   // const startingtime = req.body.startingtime;
@@ -400,7 +372,8 @@ app.post("/studentsingle", (req, res) => {
   const exmId = req.body.exmId;
   //const questionId = req.body.questionId;
   const questionList = req.body.questionList;
-  console.log("idstudent", idstudent);
+  const studentid = idstudent.user[0].idstudent;
+  //console.log("idstudent", idstudent);
 
   const qli = [];
   questionList.map((array) => {
@@ -425,33 +398,162 @@ app.post("/studentsingle", (req, res) => {
         },
       ],
     };
-    qli.push(question, exmId);
-    console.log("q", qli);
-
+    qli.push(question);
     db.query(
-      "INSERT INTO studentexam (IdExam,idstudent,score)VALUES(?,?,?)",
-      [exmId, idstudent.user[0].idstudent, 55],
+      "SELECT * FROM studentexam WHERE IdExam =? AND idstudent= ? ",
+      [exmId, studentid],
       (err, result) => {
-        if (!err) {
-          saveAnswers(result.insertId, qli);
-          res.send({ message: "Save Success" });
-        } else {
+        if (err) {
           console.log(err);
+        } else if (result.length === 0) {
+          studentexam(exmId, studentid, qli);
+        } else {
+          saveAnswers(exmId, studentid, qli);
         }
       }
     );
   });
+  const studentexam = (exmId, studentid, qli) => {
+    db.query(
+      "INSERT INTO studentexam (IdExam,idstudent,score)VALUES(?,?,?)",
+      [exmId, studentid, 55],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+        } else {
+          saveAnswers(exmId, studentid, qli);
+        }
+      }
+    );
+  };
 
-  const saveAnswers = (exmId, LoginId, qli) => {
-    qli.forEach((ans) => {
+  const saveAnswers = (exmId, studentid, qli) => {
+    qli.map((q) => {
+      //console.log("qli 1", q);
       db.query(
-        "INSERT INTO student_answer (answer,idQuestion,IdExam,idstudent,CorrectAns)VALUES(?,?,?,?)"[
-          (ans.answer,
-          ans.questionId,
-          exmId,
-          idstudent.user[0].idstudent,
-          ans.CorrectAns)
-        ],
+        "SELECT * FROM student_answer WHERE IdExam=? AND idstudent=? AND idQuestion=?",
+        [exmId, studentid, q.idQuestion],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          } else if (result.length === 0) {
+            q.answers.map((an) => {
+              db.query(
+                "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
+                [an.answer, q.idQuestion, studentid, exmId, an.CorrectAns],
+                (err, result) => {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log("answ", result);
+
+                    //updateAnswers(exmId, studentid, an.answers);
+                    db.query(
+                      "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
+                      [
+                        (an.answer,
+                        q.idQuestion,
+                        an.CorrectAns,
+                        studentid,
+                        exmId),
+                      ],
+
+                      (err, result) => {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          console.log("DB students", result);
+                          res.send(result);
+                        }
+                      }
+                    );
+                  }
+                }
+              );
+            });
+          }
+          //else {
+
+          //   //updateAnswers(exmId, studentid, q.answers);
+          // }
+        }
+      );
+
+      // q.answers.map((an) => {
+
+      //   db.query(
+      //     "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
+      //     [an.answer, q.idQuestion, studentid, exmId, an.CorrectAns],
+      //     (err, result) => {
+      //       if (err) {
+      //         console.log(err);
+      //       }
+      //       else if (result.length === 0) {
+      //     }
+      //   }
+      //   );
+      // });
+    });
+
+    // qli.map((ans) => {
+    //   //   console.log("answer cgcgg", ans);
+    //   ans.answers.maps((answ) => {
+    //     console.log("answer answerr", answ);
+    //   });
+    // db.query(
+    //   "SELECT * FROM student_answer WHERE IdExam=? AND idstudent=? AND idQuestion=?",
+    //   [exmId, studentid, ans.idQuestion],
+    //   (err, result) => {
+    //     if (err) {
+    //       console.log(err);
+    //     } else if (result.length === 0) {
+    //       console.log(result);
+    //       // addAnswers(exmId, studentid, qli);
+    //       db.query(
+    //         "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
+    //         [ans.answer, 1, studentid, exmId, ans.CorrectAns],
+
+    //         (err, result) => {
+    //           if (err) {
+    //             console.log(err);
+    //           } else {
+    //             console.log("an", result);
+    //             //updateAnswers(exmId, studentid, ans.answers);
+    //           }
+    //         }
+    //       );
+    //     } else {
+    //       // updateAnswers(exmId, studentid, qli);
+    //     }
+    //   }
+    // );
+    // });
+  };
+
+  // const addAnswers = (exmId, studentid, qli) => {
+  // qli.forEach((ans) => {
+  // db.query(
+  //   "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
+  //   [answer, idQuestion, studentid, exmId, CorrectAns],
+
+  //   (err, result) => {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       console.log("an", result);
+  //       //updateAnswers(exmId, studentid, ans.answers);
+  //     }
+  //   }
+  // );
+  // });
+  // };
+
+  const updateAnswers = (exmId, studentid, answers, qli) => {
+    answers.forEach((answ) => {
+      console.log("answer", answ);
+      db.query(
+        "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
+        [(answ.answer, answ.idQuestion, answ.CorrectAns, studentid, exmId)],
 
         (err, result) => {
           if (err) {

@@ -387,7 +387,12 @@ class TeacherSingleForm extends React.Component {
             onChange={(e) => this.handledateTime(e.target.value)}
           ></Form.Control>
           <Button
-            style={{ padding: "10px", width: "30%", margin: "9px" }}
+            style={{
+              padding: "10px",
+              display: "inline",
+              width: "20%",
+              margin: "20px",
+            }}
             size={"lg"}
             variant="success"
             onClick={() => this.handleSave()}

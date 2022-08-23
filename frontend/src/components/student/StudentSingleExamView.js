@@ -105,54 +105,30 @@ class StudentSingleExamView extends React.Component {
     if (selindx < this.state.questionList.length - 1) {
       this.setState({ selectedIndex: selindx + 1 });
     }
-    console.log("questonlist", this.state.questionList);
-    console.log("loginnext", JSON.parse(localStorage.getItem("user")));
-    axios
-      .post("http://localhost:3001/studentsingle", {
-        questionList: this.state.questionList,
-        exmId: this.state.examId,
-        idstudent: JSON.parse(localStorage.getItem("user")),
-      })
-
-      .then((res) => {
-        if (res.data.message) {
-          alert("Exam Save Successfully");
-        }
-      });
   };
   clickPrev = () => {
     var selindx = this.state.selectedIndex;
     if (selindx > 0) {
       this.setState({ selectedIndex: selindx - 1 });
     }
-    console.log("preQuestionList", this.state.questionList);
-    console.log("idstudentt", JSON.parse(localStorage.getItem("user")));
-    axios
-      .post("http://localhost:3001/studentsingle", {
-        questionList: this.state.questionList,
-        exmId: this.state.examId,
-        idstudent: JSON.parse(localStorage.getItem("user")),
-      })
-
-      .then((res) => {
-        if (res.data.message) {
-          alert("Exam Save Successfully");
-        }
-      });
   };
   clickSave = () => {
     console.log("exid", this.state.examId);
     {
-      // axios
-      //   .post("http://localhost:3001/studentsingle", {
-      //     questionList: this.state.questionList,
-      //     exmId: this.state.examId,
-      //   })
-      //   .then((res) => {
-      //     if (res.data.message) {
-      //       alert("Exam Save Successfully");
-      //     }
-      //   });
+      console.log("questonlist", this.state.questionList);
+      console.log("loginnext", JSON.parse(localStorage.getItem("user")));
+      axios
+        .post("http://localhost:3001/studentsingle", {
+          questionList: this.state.questionList,
+          exmId: this.state.examId,
+          idstudent: JSON.parse(localStorage.getItem("user")),
+        })
+
+        .then((res) => {
+          if (res.data.message) {
+            alert("Exam Save Successfully");
+          }
+        });
     }
   };
 

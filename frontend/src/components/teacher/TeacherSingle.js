@@ -81,8 +81,8 @@ class TeacherSingle extends React.Component {
     return (
       <div className="align-items-center justify-content-center teacher-table">
         <Button
-          style={{ padding: "10px", width: "30%", margin: "9px" }}
-          size={"lg"}
+          style={{ padding: "10px", width: "10%", margin: "20px" }}
+          size={"sm"}
           variant="success"
           onClick={() => this.handleBack()}
         >
@@ -92,7 +92,7 @@ class TeacherSingle extends React.Component {
           style={{
             justifyContent: "center",
             margintop: "10px",
-            padding: "50px",
+            padding: "20px",
             border: "2px solid rgba(0, 0, 0.5, 0.05)",
             backgroundColor: "transparent",
           }}
