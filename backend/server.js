@@ -73,23 +73,6 @@ app.post("/login", (req, res) => {
   );
 });
 
-app.post("/student", (req, res) => {
-  console.log(req.body);
-  const idstudent = req.body.idstudent;
-
-  db.query(
-    "SELECT * FROM student WHERE idstudent =? ",
-    [idstudent],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        // console.log("DB DATA", result);
-        // res.send(result);
-      }
-    }
-  );
-});
 app.post("/teachersingle", (req, res) => {
   const { examname, duration, datetime, quesArray, idteacher } = req.body;
   console.log("body: " + quesArray);
@@ -254,9 +237,8 @@ const saveUpdatedAnswers = (quizId, answers) => {
 };
 // Teacher Main
 app.get("/teachertable", (req, res) => {
-  console.log(req.body);
   const idteacher = req.query.idteacher;
-  console.log("idteacher", JSON.parse(idteacher).user[0].idteacher);
+  //console.log("teacherid", JSON.parse(idteacher).user[0].idteacher);
 
   // const examm = req.body.examm;
   // const stat = req.body.stat;
@@ -264,14 +246,13 @@ app.get("/teachertable", (req, res) => {
   // const duration = req.body.duration;
   db.query(
     "SELECT Idexam,exam,status,startingtime,duration FROM exam WHERE idteacher =? ",
-    // "SELECT Idexam,exam,status,startingtime,duration FROM exam LEFT JOIN teacher ON exam.idteacher = teacher.idteacher WHERE idteacher   = ?",
     [JSON.parse(idteacher).user[0].idteacher],
 
     (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(results);
+        console.log("te result", results);
         res.send(results);
       }
     }
@@ -341,8 +322,8 @@ app.get("/QuestionAns/:examId", (req, res) => {
 
 //student table
 app.get("/studenttable", (req, res) => {
-  console.log(req.body);
-  const LoginId = req.query.loginid;
+  //console.log("st", req.body);
+  //const LoginId = req.query.loginid;
 
   // const examm = req.body.examm;
   // const stat = req.body.stat;
@@ -356,7 +337,7 @@ app.get("/studenttable", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log("student  ", results);
+        //console.log("student  ", results);
         res.send(results);
       }
     }
@@ -448,25 +429,25 @@ app.post("/studentsingle", (req, res) => {
                     console.log("answ", result);
 
                     //updateAnswers(exmId, studentid, an.answers);
-                    db.query(
-                      "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
-                      [
-                        (an.answer,
-                        q.idQuestion,
-                        an.CorrectAns,
-                        studentid,
-                        exmId),
-                      ],
+                    // db.query(
+                    //   "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
+                    //   [
+                    //     (an.answer,
+                    //     q.idQuestion,
+                    //     an.CorrectAns,
+                    //     studentid,
+                    //     exmId),
+                    //   ],
 
-                      (err, result) => {
-                        if (err) {
-                          console.log(err);
-                        } else {
-                          console.log("DB students", result);
-                          res.send(result);
-                        }
-                      }
-                    );
+                    //   (err, result) => {
+                    //     if (err) {
+                    //       console.log(err);
+                    //     } else {
+                    //       console.log("DB students", result);
+                    //       res.send(result);
+                    //     }
+                    //   }
+                    // );
                   }
                 }
               );
@@ -478,56 +459,7 @@ app.post("/studentsingle", (req, res) => {
           // }
         }
       );
-
-      // q.answers.map((an) => {
-
-      //   db.query(
-      //     "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
-      //     [an.answer, q.idQuestion, studentid, exmId, an.CorrectAns],
-      //     (err, result) => {
-      //       if (err) {
-      //         console.log(err);
-      //       }
-      //       else if (result.length === 0) {
-      //     }
-      //   }
-      //   );
-      // });
     });
-
-    // qli.map((ans) => {
-    //   //   console.log("answer cgcgg", ans);
-    //   ans.answers.maps((answ) => {
-    //     console.log("answer answerr", answ);
-    //   });
-    // db.query(
-    //   "SELECT * FROM student_answer WHERE IdExam=? AND idstudent=? AND idQuestion=?",
-    //   [exmId, studentid, ans.idQuestion],
-    //   (err, result) => {
-    //     if (err) {
-    //       console.log(err);
-    //     } else if (result.length === 0) {
-    //       console.log(result);
-    //       // addAnswers(exmId, studentid, qli);
-    //       db.query(
-    //         "INSERT INTO student_answer (answer,idQuestion,idstudent,IdExam,CorrectAns) VALUES(?,?,?,?,?)",
-    //         [ans.answer, 1, studentid, exmId, ans.CorrectAns],
-
-    //         (err, result) => {
-    //           if (err) {
-    //             console.log(err);
-    //           } else {
-    //             console.log("an", result);
-    //             //updateAnswers(exmId, studentid, ans.answers);
-    //           }
-    //         }
-    //       );
-    //     } else {
-    //       // updateAnswers(exmId, studentid, qli);
-    //     }
-    //   }
-    // );
-    // });
   };
 
   // const addAnswers = (exmId, studentid, qli) => {
@@ -548,24 +480,24 @@ app.post("/studentsingle", (req, res) => {
   // });
   // };
 
-  const updateAnswers = (exmId, studentid, answers, qli) => {
-    answers.forEach((answ) => {
-      console.log("answer", answ);
-      db.query(
-        "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
-        [(answ.answer, answ.idQuestion, answ.CorrectAns, studentid, exmId)],
+  // const updateAnswers = (exmId, studentid, answers, qli) => {
+  //   answers.forEach((answ) => {
+  //     console.log("answer", answ);
+  //     db.query(
+  //       "UPDATE student_answer SET answer = ?,idQuestion=?,CorrectAns=?, idstudent=? WHERE idstudentAnswer= ?",
+  //       [(answ.answer, answ.idQuestion, answ.CorrectAns, studentid, exmId)],
 
-        (err, result) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("DB students", result);
-            res.send(result);
-          }
-        }
-      );
-    });
-  };
+  //       (err, result) => {
+  //         if (err) {
+  //           console.log(err);
+  //         } else {
+  //           console.log("DB students", result);
+  //           res.send(result);
+  //         }
+  //       }
+  //     );
+  //   });
+  // };
 });
 
 app.listen(3001, () => {

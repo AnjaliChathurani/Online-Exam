@@ -31,30 +31,6 @@ class StudentSingleExamView extends React.Component {
           answer3: { answer: "", CorrectAns: false },
           answer4: { answer: "", CorrectAns: false },
         },
-        // {
-        //   id: 1,
-        //   Question: "",
-        //   answer1: { answer: "", isAnswer: false },
-        //   answer2: { answer: "", isAnswer: false },
-        //   answer3: { answer: "", isAnswer: false },
-        //   answer4: { answer: "", isAnswer: false },
-        // },
-        // {
-        //   id: 2,
-        //   Question: "",
-        //   answer1: { answer: "", isAnswer: false },
-        //   answer2: { answer: "", isAnswer: false },
-        //   answer3: { answer: "", isAnswer: false },
-        //   answer4: { answer: "", isAnswer: false },
-        // },
-        // {
-        //   id: 3,
-        //   Question: " ",
-        //   answer1: { answer: "", isAnswer: false },
-        //   answer2: { answer: "", isAnswer: false },
-        //   answer3: { answer: "", isAnswer: false },
-        //   answer4: { answer: "", isAnswer: false },
-        // },
       ],
 
       selectedIndex: 0,
@@ -136,10 +112,26 @@ class StudentSingleExamView extends React.Component {
     //console.log("completed");
     this.props.history.push("/StudentMainView");
   };
+  handleBack = () => {
+    const idstudent = JSON.parse(localStorage.getItem("user"));
+    this.props.history.push({
+      pathname: "/StudentMainView",
+      state: { detail: idstudent },
+    });
+    console.log("details check", idstudent);
+  };
 
   render() {
     return (
       <div className="align-items-center justify-content-center student-single-exam">
+        <Button
+          style={{ padding: "10px", width: "10%", margin: "20px" }}
+          size={"sm"}
+          variant="success"
+          onClick={() => this.handleBack()}
+        >
+          Back
+        </Button>
         <div
           style={{
             justifyContent: "center",
